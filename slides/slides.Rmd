@@ -130,7 +130,7 @@ class: inverse, center, middle
 ---
 class: inverse, center, middle
 
-# Dudas
+# Preguntas
 
 ---
 background-image: url(pics/pic15.png)
@@ -283,6 +283,7 @@ ggplot(data_re, aes(x = reorder(myear, id), y = value, col = variable, group = v
         strip.background = element_rect(fill = "grey20"),
         legend.title = element_blank(),
         legend.background = element_rect(fill = "#E9EBEE"),
+        legend.position = "bottom",
         strip.text = element_text(family = "Arial", color = "black", hjust = .2, face = "bold"),
         plot.caption = element_text(color = "grey40", size = 7),
         plot.subtitle = element_text(color = "grey40"))
@@ -485,6 +486,39 @@ class: inverse, middle, center
 
 
 ---
+
+# ¿Ponderar por el recuerdo de voto? (SD)
+
+.center[
+![](pics/plot4.png)
+]
+
+
+
+---
+
+# ¿Ponderar por el recuerdo de voto?
+
+.center[
+![](pics/plot2.png)
+]
+
+
+
+
+
+
+---
+
+# ¿Ponderar por el recuerdo de voto? (RV3)
+
+.center[
+![](pics/plot5.png)
+]
+
+
+
+---
 # ¿Imputar la intención de voto?
 
 .center[
@@ -537,5 +571,63 @@ el sesgo de los estudios electorales en España». Revista Española de Investig
 
 Esta investigación cuenta con el apoyo del programa de becas de la Fundación "La Caixa" LCF/BQ/ES16/11570005
 
+---
 
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=14, fig.height=11}
+##1. Get file
+d <- read_csv2("data/polls.csv", locale=locale(encoding="Latin2"))[1:13]
+
+##2. Data prep
+
+# reshape
+dlong <- gather(d, "partido", "porc", 9:13)
+
+# x
+dlong$fincampo <- as.Date(dlong$fincampo, format = "%d/%m/%Y")
+
+# facet
+dlong <- filter(dlong, pollster != "GESOP", pollster != "MyWord", pollster != "Instituto DYM", pollster != "Sigma Dos", pollster != "IMOP", medio != "La Vanguardia") %>% 
+ mutate(porc = ifelse(is.na(porc) & partido == "vox" & as.numeric(fincampo) > as.numeric(as.Date("2018-09-01")), 1, porc))
+
+# group
+dlong$partido <- recode(dlong$partido, "psoe" = "PSOE", "pp" = "PP", "podemos" = "UPodemos", "cs" = "Cs", "vox" = "VOX")
+
+##3. Plot 1
+
+plot1 <- ggplot(dlong, aes(x = fincampo, y = porc, col = partido, group = partido)) +
+                geom_smooth(se = F) +
+                geom_vline(xintercept = c(as.numeric(as.Date("2016-07-01")), as.numeric(as.Date("2017-01-01")),
+                                          as.numeric(as.Date("2017-07-01")), as.numeric(as.Date("2018-01-01")),
+                                          as.numeric(as.Date("2018-07-01")), as.numeric(as.Date("2019-01-01"))), alpha = .4, col = "gray") +
+                annotate("text", x = as.Date("2016-08-15"), y = 39, label = "jul. 16", size = 2.5, col = "grey40" ) +
+                annotate("text", x = as.Date("2017-02-15"), y = 39, label = "ene. 17", size = 2.5, col = "grey40" ) +
+                annotate("text", x = as.Date("2017-08-15"), y = 39, label = "jul. 17", size = 2.5, col = "grey40" ) +
+                annotate("text", x = as.Date("2018-02-15"), y = 39, label = "ene. 18", size = 2.5, col = "grey40" ) +
+                annotate("text", x = as.Date("2018-08-15"), y = 39, label = "jul. 18", size = 2.5, col = "grey40" ) +
+                annotate("text", x = as.Date("2019-02-15"), y = 39, label = "ene. 19", size = 2.5, col = "grey40" ) +
+                geom_point(size = 2, alpha = .5) + 
+                facet_wrap(~ pollster) +
+                scale_color_manual(values = c("darkorange", "deepskyblue2", "red2", "darkorchid4", "green4")) +
+                scale_y_continuous(limits = c(0, 40)) +
+                labs(title = "Evolución de la estimación de voto",
+                     subtitle = "En porcentaje de voto válido",
+                     caption = "Elaboración @pablocalv") +
+                theme(axis.text.x = element_blank(),
+                      axis.title = element_blank(),
+                      axis.ticks = element_blank(),
+                      legend.position = "none",
+                      panel.grid.major.x = element_blank(),
+                      panel.grid.minor.x = element_blank(),
+                      panel.grid.major.y = element_line(color = "gray90"),
+                      panel.grid.minor.y = element_blank(),
+                      panel.background = element_rect(fill = "white"),
+                      strip.background = element_rect(fill = "gray96"),
+                      strip.text = element_text(family = "Arial", color = "black", hjust = .2, face = "bold"),
+                      plot.caption = element_text(color = "grey40", size = 7),
+                      plot.subtitle = element_text(color = "grey40"))
+
+
+plot1
+```
 
