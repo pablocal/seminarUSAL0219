@@ -210,7 +210,7 @@ background-size: 95%
 .pull-left[
 &lt;/br&gt; &lt;/br&gt;
 Ponderación como: &lt;/br&gt; &lt;/br&gt;
-&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `\(w_i = \frac{N_i}{n_i}\)`
+&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `\(w_k = \frac{N_k}{n_k}\)`
 
 Para las **mujeres**: &lt;/br&gt; &lt;/br&gt;
 &amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp;&amp;nbsp; `\(w_m = \frac{5}{2} = 2.5\)`
@@ -381,9 +381,9 @@ $$ EMAP =  \sum_{k=1}^{k} |\hat{p}_k - p_k|p_k $$
 
 |    Nombre                  |    Variable objetivo   (modelo)      |    Predictores    |
 |-------------------------------|--------------------------------------|-------------------------------|
-|    RV1 sin imputar            |                                      |                               |
-|    RV2 imputado (NR)          |    Recuerdo de voto (multinomial)    |    Conjunto mixto             |
-|    RV3 imputado (NR y NVJ)    |    Recuerdo de voto (multinomial)    |    Conjunto mixto             |
+|    **RV1 sin imputar**            |                                      |                               |
+|    **RV2 imputado (NR)**          |    Recuerdo de voto (multinomial)    |    Conjunto mixto             |
+|    **RV3 imputado (NR y NVJ)**    |    Recuerdo de voto (multinomial)    |    Conjunto mixto             |
 
 **Conjunto mixto**: Sexo, edad, tamaño de hábitat, comunidad autónoma, intención de voto e ideología
 
@@ -394,11 +394,11 @@ $$ EMAP =  \sum_{k=1}^{k} |\hat{p}_k - p_k|p_k $$
 
 |    Nombre                      |    Variable objetivo   (modelo)                                                              |    Predictores     |
 |--------------------------------|----------------------------------------------------------------------------------------------|--------------------------------|
-|    No imputada              |                                                                                              |                                |
-|    Univariada básica        |    Intención de voto (multinomial)                                                           |    Conjunto básico        |
-|    Univariada   ampliada    |    Intención de voto (multinomial)                                                           |    Conjunto ampliado   |
-|    Encadenada básica        |    Intención de voto (multinomial)   Recuerdo de voto (multinomial)   Ideología (ordinal)    |    Conjunto básico        |
-|    Encadenada   ampliada    |    Intención de voto (multinomial)   Recuerdo de voto (multinomial)   Ideología (ordinal)    |    Conjunto ampliado    |
+|   **No imputada (EB)**              |                                                                                              |                                |
+|    **Univariada básica**        |    Intención de voto (multinomial)                                                           |    Conjunto básico        |
+|    **Univariada   ampliada**    |    Intención de voto (multinomial)                                                           |    Conjunto ampliado   |
+|    **Encadenada básica**        |    Intención de voto (multinomial)   Recuerdo de voto (multinomial)   Ideología (ordinal)    |    Conjunto básico        |
+|    **Encadenada   ampliada**    |    Intención de voto (multinomial)   Recuerdo de voto (multinomial)   Ideología (ordinal)    |    Conjunto ampliado    |
 
 **Conjunto básico**: Sexo, edad, nivel educativo, recuerdo de voto e ideología
 **Conjunto ampliado**: Sexo, edad, nivel educativo, recuerdo de voto, ideología, evaluación de la situación económica y evaluación de la situación política
@@ -514,6 +514,14 @@ Esta investigación cuenta con el apoyo del programa de becas de la Fundación "
 
 
 ![](slides_files/figure-html/unnamed-chunk-3-1.png)&lt;!-- --&gt;
+
+---
+# Recuerdo voto CIS
+
+
+.center[
+![](pics/pic19.png)
+]
     </textarea>
 <style data-target="print-only">@media screen {.remark-slide-container{display:block;}.remark-slide-scaler{box-shadow:none;}}</style>
 <script src="https://remarkjs.com/downloads/remark-latest.min.js"></script>
