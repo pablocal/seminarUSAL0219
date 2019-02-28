@@ -93,25 +93,16 @@ class: inverse, center, middle
 ]
 
 ---
-# La vida de un *pollster*
 
---
-.center[
-![](https://media.giphy.com/media/xT5LMESsx1kUe8Hiyk/giphy.gif)
-]
-
-
-
----
 # ¿Qué puede fallar en una estimación de voto?
 
 - Problemas de **medición**
 
-  + Reporte erróneo deliberado
+  + Reporte erróneo deliberado (Bodor, 2012)
 
-  + Cambio de opinión de los votantes
+  + Cambio de opinión de los votantes (Durand *et al.*, 2002; MRS, 1994)
 
-  + Modo de administración
+  + Modo de administración (Abramson, 2007; Callegaro y Gasperoni, 2008)
   
 --
 
@@ -119,20 +110,27 @@ class: inverse, center, middle
 
   + Voto por correo y votantes en el extranjero
 
-  + Estimación de la participación
+  + Estimación de la participación (Abrams, 1970; Callegaro y Gasperoni, 2008)
 
-  + No respuesta y sesgo de autoselección
+  + No respuesta y sesgo de autoselección (Jowell *et al.*, 1993; Durand *et al.*, 2002; Callegaro y Gasperoni, 2008; Sturgis *et al.*, 2016)
 --
 
 - Efecto **rebaño**
 
 ---
+
+# La vida de un *pollster* en la cocina
+
+--
+.center[
+![](https://media.giphy.com/media/3o6Zt8HWzhklRk36xy/giphy.gif)
+]
+
+
+---
 class: inverse, center, middle
 
 # Dudas
-
----
-# Representatividad y no respuesta
 
 ---
 background-image: url(pics/pic15.png)
@@ -143,7 +141,7 @@ background-size: 95%
 --
 
 .pull-left[
-Población de cinco  </br> **hombres** y cinco **mujeres** </br> (censo).
+Población de cinco  </br> **hombres** y cinco **mujeres** </br> (censo)
 ]
 
 --
@@ -153,7 +151,7 @@ Población de cinco  </br> **hombres** y cinco **mujeres** </br> (censo).
 </br>
 </br>
 </br>
- &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Investigar su **intención de </br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voto**.
+ &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; Investigar su **intención de </br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;voto**
 ]
 
 
@@ -207,7 +205,7 @@ Muestra: </br>
 background-image: url(pics/pic17.png)
 background-position: 50% 50% 
 background-size: 95% 
-# Ponderación
+# Ponderación de no respuesta
 
 --
 .pull-left[
@@ -219,7 +217,7 @@ Para las **mujeres**: </br> </br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $w_m = \frac{5}{2} = 2.5$
 
 Para los **hombres**: </br> </br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $w_h = \frac{1}{1} = 1.0$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; $w_h = \frac{5}{5} = 1.0$
 ]
 
 --
@@ -236,14 +234,12 @@ Para los **hombres**: </br> </br>
 ---
 # Ponderación de no respuesta
 
-</br>
-</br>
 
-  * **Ajuste estadístico** que permite compensar las diferencias en las probabilidades de respuesta de diferentes subgrupos 
+  * **Ajuste estadístico** que permite compensar las diferencias en las probabilidades de respuesta de diferentes subgrupos (Särndal, 2007)
 
 --
 
-  * **Variables auxiliares** disponibles para los que responden y los que no responden, o al menos los totales poblacionales (*por ej.* sexo)
+  * **Variables auxiliares** disponibles para los que responden y los que no responden, o al menos los totales poblacionales (*por ej.* sexo, edad, voto en anteriores elecciones...)
 
 --
 
@@ -251,8 +247,49 @@ Para los **hombres**: </br> </br>
 
 --
 
-  * Se precisa que la distribución de la variable de interés dentro de los subgrupos de la muestra sea similar a la que existe en la población
-  
+* La **distribución de la variable de interés** dentro de los subgrupos de las variables auxiliares debe ser similar a la distribución en la población (Sturgis *et al.*, 2016)
+
+--
+
+* En estudios para estimar voto uso recurrente de la variable **recuerdo de voto**. Debate sobre su uso (Crespi, 1988; Voss *et al.*, 1995; Durand *et al.*, 2015; Crewe, 2001; Escobar *et al.*, 2014)
+
+---
+# Problemas del recuerdo de voto
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=11, fig.height=7}
+library(tidyverse)
+
+data <- read_csv2("data/recuerdo_voto_cis.csv")
+data_re <- reshape2::melt(data = data, id.vars = c("year", "year2", "month", "elec", "bar", "periodo", "id"))
+data_re <- data_re %>% filter(!is.na(value)) %>% mutate(myear = paste(month, year, sep = "-"),
+                                                        varper = paste0(variable, periodo, elec))
+
+ggplot(data_re, aes(x = reorder(myear, id), y = value, col = variable, group = varper )) +
+  geom_line(size = .75) +
+  geom_point(data = filter(data_re, elec ==1), size = 3, shape = 15) +
+  labs(title = "Recuerdo de voto barómetros CIS (1994-2004)",
+       subtitle = "En porcentaje sobre censo") +
+  scale_color_manual(values = c("darkorange", "darkorchid4", "grey", "maroon", "red2", "deepskyblue2"),
+                     labels = c("NS", "NC", "Blanco", "No votó", "PSOE", "PP")) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(color = "gray70"),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = "#E9EBEE"),
+        plot.background = element_rect(fill = "#E9EBEE"),
+        strip.background = element_rect(fill = "grey20"),
+        legend.title = element_blank(),
+        legend.background = element_rect(fill = "#E9EBEE"),
+        strip.text = element_text(family = "Arial", color = "black", hjust = .2, face = "bold"),
+        plot.caption = element_text(color = "grey40", size = 7),
+        plot.subtitle = element_text(color = "grey40"))
+```
+
+
+
 
 ---
 background-image: url(pics/pic18.png)
@@ -267,44 +304,238 @@ Dos entrevistados </br>
 rechazaron revelar </br>
 su **intención de voto**
 </br>
-
 ]
 
 --
+</br> </br></br> </br></br> </br></br> </br></br> </br></br> </br>
+.pull-right[
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Usar otra información </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;de la encuesta para </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; **imputar**
+</br>
+]
+
+---
+
+# No respuesta parcial
+
+
+```{r, echo=FALSE, warning=FALSE, message=FALSE, fig.width=9, fig.height=6}
+library(tidyverse)
+
+data <- read_csv2("data/perdidos_iv_rv_cis.csv")
+
+ggplot(data, aes(x = year, y = val, col = var, group = var )) +
+  geom_line(size = 1) +
+  labs(title = "Valores perdidos en preelectorales CIS",
+       subtitle = "En porcentaje sobre total de casos") +
+  scale_color_manual(values = c("darkorange", "darkorchid4"),
+                     labels = c("Intención de voto", "Recuerdo de voto")) +
+  scale_x_continuous(breaks = c(1986, 1989, 1993, 1996, 2000, 2004, 2008, 2011, 2015, 2016)) +
+  scale_y_continuous(limits = c(0, 50)) +
+  theme(axis.text.x = element_text(angle = 90, hjust = 1),
+        axis.title = element_blank(),
+        axis.ticks = element_blank(),
+        panel.grid.major.x = element_blank(),
+        panel.grid.minor.x = element_blank(),
+        panel.grid.major.y = element_line(color = "gray70"),
+        panel.grid.minor.y = element_blank(),
+        panel.background = element_rect(fill = "#E9EBEE"),
+        plot.background = element_rect(fill = "#E9EBEE"),
+        strip.background = element_rect(fill = "grey20"),
+        legend.position = "bottom",
+        legend.title = element_blank(),
+        legend.background = element_rect(fill = "#E9EBEE"),
+        strip.text = element_text(family = "Arial", color = "black", hjust = .2, face = "bold"),
+        plot.caption = element_text(color = "grey40", size = 7),
+        plot.subtitle = element_text(color = "grey40"))
+```
+
+---
+# Imputación
+
+* Diversidad de **métodos de imputación**: imputación de la media/moda, *hot-deck*, imputación condicional, imputación múltiple
+
+--
+
+* Posibilidad de utilizar otras variables del cuestionario para **informar la imputación** (*por ej.* imputación condicional, *hot-deck*)
+
+--
+
+* La **imputación múltiple** consiste en generar $m$ bases de datos completas con lo que se añade a la varianza un componente derivado de la incertidumbre debida a los datos perdidos (Rivero, 2011)
+
+--
+
+* La imputación de la **intención de voto** llevada a cabo con técnicas *ad hoc* según la casa de encuestas (Crespi, 1988; Sturgis *et al.*, 2016)
+
+--
+
+* Algunos intentos de utilizar imputación múltiple en el ámbito electoral desde la academia (*por ej.*  Bernhagen y Marsh, 2007; Escobar y Jaime, 2013; Liu, 2014)
 
 ---
 
 
-
-
-# Imputación múltiple
-
----
 # Hipótesis
 
 --
-H1:
+
+* **H1**:  La **ponderación** de la muestra por **recuerdo de voto** contribuye a incrementar la precisión de la estimación de voto
 
 --
-H2:
+
+
+* **H2**: El uso de la **ponderación** que combina las variables **sociodemográficas** y el **recuerdo de voto** será el más efectivo para reducir el nivel de error de la estimación de voto 
 
 --
-H3:
+
+* **H3**:  El uso de técnicas de **imputación múltiple** para tratar la variable **recuerdo de voto** reduce el nivel de sesgo presente en esta variable y, en consecuencia, su uso en la ponderación incrementa la precisión de la estimación de voto
 
 --
-H4:
+
+* **H4**:  El uso de técnicas de **imputación múltiple** para asignar una **intención de voto** a aquellos que no saben o no contestan incrementa la precisión de la estimación de voto
+
+--
+
+* **H5**: El uso de la variable **recuerdo de voto** para ponderar tiene un efecto positivo en la precisión de las estimaciones en las **elecciones en las que hay continuidad política**, también después de 2015
 
 ---
-Metodología
+# Datos y métodos
+
+* **Datos** de encuestas **preelectorales y postelectorales del CIS** para las elecciones 1982-2016
+
+--
+
+* **Ponderaciones** generadas usando **calibración logística**
+
+
+* **Imputación múltiple** utilizando un sistema  **ecuaciones encadenadas** y **univariada**
+
+--
+
+* Estimaciones evaluadas utilizando el **error medio absoluto ponderado** (EMAP) con respecto a los resultados electorales:
+
+$$ EMAP =  \sum_{k=1}^{k} |\hat{p}_k - p_k|p_k $$
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; donde $\hat{p}_k$ es la estimación de voto para el partido $k$ y $p_k$ su resultado en </br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;las elecciones
+
+* EMAP de cada estimación y recuerdo de voto imputado modelado usando regresión lineal (MCO) 
 
 ---
+# Métodos: ponderación
 
+|    Nombre    |    Variables de ponderación                  |    RV imputado    |    Ámbito del RV               |
+|-------------|----------------------------------------------|-------------------|-----------------------------------|
+|    **EB**       |    Provincia                                 |                   |                                   |
+|    **SD**       |    Provincia y sociodemográficas (SD)        |                   |                                   |
+|    **RV0**      |    Provincia y recuerdo de voto (RV)        |    No             |    NR, NV y NVJ excluidos    |
+|    **RV1**      |    Provincia y RV             |    No             |    NR, NV y NVJ incluidos     |
+|    **RV2**      |    Provincia y RV             |    Sí (NR imputado)            |    NR, NV y NVJ incluidos      |
+|    **RV3**      |    Provincia y RV             |    Sí (NR y NVJ imputado)             |    NR, NV y NVJ incluidos     |
+|    **SD+RV**    |    Provincia, SD y RV    |    Sí (NR y NVJ imputado)             |    NR, NV y NVJ incluidos     |
+
+---
+# Métodos: imputación múltiple
+
+
+* **Recuerdo de voto**: 
+
+|    Nombre                  |    Variable objetivo   (modelo)      |    Predictores    |
+|-------------------------------|--------------------------------------|-------------------------------|
+|    RV1 sin imputar            |                                      |                               |
+|    RV2 imputado (NR)          |    Recuerdo de voto (multinomial)    |    Conjunto mixto             |
+|    RV3 imputado (NR y NVJ)    |    Recuerdo de voto (multinomial)    |    Conjunto mixto             |
+
+**Conjunto mixto**: Sexo, edad, tamaño de hábitat, comunidad autónoma, intención de voto e ideología
+
+---
+# Métodos: imputación múltiple
+
+* **Intención de voto**: 
+
+|    Nombre                      |    Variable objetivo   (modelo)                                                              |    Predictores     |
+|--------------------------------|----------------------------------------------------------------------------------------------|--------------------------------|
+|    No imputada              |                                                                                              |                                |
+|    Univariada básica        |    Intención de voto (multinomial)                                                           |    Conjunto básico        |
+|    Univariada   ampliada    |    Intención de voto (multinomial)                                                           |    Conjunto ampliado   |
+|    Encadenada básica        |    Intención de voto (multinomial)   Recuerdo de voto (multinomial)   Ideología (ordinal)    |    Conjunto básico        |
+|    Encadenada   ampliada    |    Intención de voto (multinomial)   Recuerdo de voto (multinomial)   Ideología (ordinal)    |    Conjunto ampliado    |
+
+**Conjunto básico**: Sexo, edad, nivel educativo, recuerdo de voto e ideología
+**Conjunto ampliado**: Sexo, edad, nivel educativo, recuerdo de voto, ideología, evaluación de la situación económica y evaluación de la situación política
+---
 class: inverse, middle, center
 
 # Indicios
 
 ---
 
-# 
+# ¿Imputar el recuerdo de voto?
+
+.center[
+![](pics/plot1.png)
+]
 
 ---
+
+# ¿Ponderar por el recuerdo de voto?
+
+.center[
+![](pics/plot2.png)
+]
+
+
+---
+# ¿Imputar la intención de voto?
+
+.center[
+![](pics/plot3.png)
+]
+
+---
+class: center, middle, inverse
+
+# Final
+
+---
+
+# Conclusiones
+
+--
+</br>
+
+* Uso de la ponderación por recuerdo de voto (**H1**) mejora la precisión de las estimaciones aunque añadir las variables sociodemográficas (**H2**) no aporta un incremento en la precisión  
+
+--
+
+* Usar la imputación múltiple para corregir la variable recuerdo de voto (**H3**) no repercute en el nivel de ajuste de la propia variable y tampoco en la precisión de la estimación
+
+--
+
+* El uso de la imputación múltiple para tratar los casos perdidos de la variable de intención de voto (**H4**) apenas afecta a la precisión de las estimaciones
+
+--
+
+* El momento del ciclo político, según se trate de elecciones de continuidad o de cambio (**H5**), sigue estando relacionado con la capacidad de la ponderación de mejorar la estimación de voto tras los cambios en el sistema de partidos
+
+---
+class: inverse, middle, center
+
+## Gracias
+
+#### pablocal@usal.es | @pablocalv </br>
+
+</br>
+</br>
+
+Cabrera-Álvarez, Pablo y Escobar, Modesto (2019). «El efecto de la ponderación y la imputación en
+el sesgo de los estudios electorales en España». Revista Española de Investigaciones Sociológicas,
+165: 45-64. 
+
+</br>
+</br>
+</br>
+
+Esta investigación cuenta con el apoyo del programa de becas de la Fundación "La Caixa" LCF/BQ/ES16/11570005
+
+
+
